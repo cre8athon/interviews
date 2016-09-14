@@ -6,65 +6,47 @@ package com.amazon.thebasics;
 public class BinarySearch {
 
     // Iterative approach
-
     public int search(int[] array, int value) {
+        int low = 0;
+        int high = array.length;
 
-        int index = 0;
-
-        index = array.length / 2;
-
-        while( true ) {
-            System.out.println("Checking at index: " + index + " value: " + array[index]);
-            if( array[index] == value) {
-                return index;
-            } else if( value < array[index]  ) {
-                    index = index - index/2;
+        while(low <= high ) {
+            int mid = low + (high - low) / 2;
+            if( array[mid] == value ) {
+                return mid;
+            } else if( array[mid] < value ) {
+                low = mid + 1;
             } else {
-                index = index + index/2;
+                high = mid - 1;
             }
+        }
+
+        return -1;
+    }
+
+    // Search for value within the array.
+    public int search(int[] array, int value, int low, int high) {
+        if( low > high ) {
+            return -1;
+        }
+
+        int mid = low + (high - low) / 2;
+        if( array[mid] == value ) {
+            return mid;
+        } else if( array[mid] < value ) {
+            return search(array, value, mid + 1, high);
+        } else {
+            return search(array, value, low, mid - 1);
         }
     }
 
-    // James P code.
-    public int findInt(int num, int[] thearray){
-        int greaterthan= 0;
-        int lessthan = 0;
-
-        int i= thearray.length/2;
-        while (true){
-            if (thearray[i] == num)
-            {
-                return i;
-            }
-            else
-            if (thearray[i] < num && greaterthan ==0 )
-            {
-                i = i/2 + i;
-                greaterthan = 1;
-            }
-            else
-            if (thearray[i] > num && lessthan ==0)
-            {
-                i = i/2;
-                lessthan = 1;
-            }
-            else
-            if (thearray[i] < num && greaterthan == 1)
-            {
-                i= i - i/2;
-            }
-            else
-            if (thearray[i] > num && lessthan ==1)
-            {
-                i=i/2;
-            }
-        }
-    }
 
     public static void main(String[] args) {
         BinarySearch bs = new BinarySearch();
 
         int[] array = new int[] {1,3,5,6,7,9,11, 15};
         System.out.println(bs.search(array, 9));
+
+        //System.out.println(bs.search(array, 9, 0, array.length));
     }
 }

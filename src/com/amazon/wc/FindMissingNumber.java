@@ -7,15 +7,22 @@ import java.util.Arrays;
  */
 public class FindMissingNumber {
 
+    // Calculate value expected in the mid of the array (used by O(log n) solution).
+    public static int calcExpected(int[] intArray, int left, int right) {
+        return intArray[left] + (intArray[right] - intArray[left]) / 2 - (right - left) % 2;
+    }
+
     // Below finds it in O(log n)
-    // -- I don't really know why this works!!
     public static int getMissingInt(int[] intArray, int left, int right) {
-        if (right == left + 1) return intArray[right] - 1;
-        int pivot = left + (right - left) / 2;
-        System.out.println(String.format("if( %d == %d + (%d - %d)/2 - (%d - %d) mod 2 )",
-            intArray[pivot], intArray[left], intArray[right], intArray[left], right, left));
-        System.out.println("\t" + (intArray[left] + (intArray[right] - intArray[left]) / 2 - (right - left) % 2));
-        if (intArray[pivot] == intArray[left] + (intArray[right] - intArray[left]) / 2 - (right - left) % 2)
+        if (right == left + 1) return intArray[right] - 1; // Base case
+        int pivot = left + (right - left) / 2; // Offset + difference/2
+        int expected = calcExpected(intArray, left, right);
+
+        System.out.println(String.format(
+                "\tcomparing (actual)%d == (expected)%d where expected = %d + (%d - %d)/2 - (%d - %d) mod 2 )",
+            intArray[pivot], expected, intArray[left], intArray[right], intArray[left], right, left));
+
+        if (intArray[pivot] == expected )
             return getMissingInt(intArray, pivot, right);
         else
             return getMissingInt(intArray, left, pivot);
@@ -44,6 +51,7 @@ public class FindMissingNumber {
     }
 
     public static void runTest(int[] arr, int expected) {
+        System.out.println(">> Running for: " + Arrays.toString(arr));
         int missingNumber = getMissingInt(arr, 0, arr.length-1);
         int m2 = findMissingNumber(arr);
 
